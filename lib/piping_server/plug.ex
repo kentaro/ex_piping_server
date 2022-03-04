@@ -1,14 +1,23 @@
 defmodule PipingServer.Plug do
-  import Plug.Conn
+  use Plug.Router
 
-  def init(options) do
-    # initialize options
-    options
+  plug :match
+  plug :dispatch
+
+  get "/" do
+    conn
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, """
+    Yet another `Piping Server` implementation in Elixir.
+    See the <a href="https://github.com/kentaro/ex_piping_server/">GitHub repository</a> for details.
+    """)
   end
 
-  def call(conn, _opts) do
-    conn
-    |> put_resp_content_type("text/plain")
-    |> send_resp(200, "Hello world")
+  match _ do
+    conn |> handle_conn()
+  end
+
+  defp handle_conn(conn) do
+
   end
 end
